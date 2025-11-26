@@ -212,7 +212,7 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 15px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-top: 20px;
             font-family: monospace;
             font-size: 0.9rem;
         }
@@ -494,12 +494,13 @@
                 <div class="card">
                     <h3 data-i18n="backend_demo">Dashboard Demo</h3>
                     <p data-i18n="backend_desc">Powerful management tools for your business.</p>
+
+                    <a href="https://hauserjr.github.io/UPayDashboard/#/dashboard/orders" target="_blank"
+                        class="btn btn-outline" data-i18n="login_dashboard">Login Dashboard</a>
                     <div class="credentials">
                         <div><span data-i18n="account">Account</span>: test1234</div>
                         <div><span data-i18n="password">Password</span>: AAaa11!!</div>
                     </div>
-                    <a href="https://hauserjr.github.io/UPayDashboard/#/dashboard/orders" target="_blank"
-                        class="btn btn-outline" data-i18n="login_dashboard">Login Dashboard</a>
                 </div>
             </div>
         </div>
@@ -833,7 +834,7 @@
             }
         };
 
-        let currentLang = 'zh'; // Default to Chinese
+        let currentLang = 'en'; // Default to Chinese
 
         function updateContent() {
             const elements = document.querySelectorAll('[data-i18n]');
