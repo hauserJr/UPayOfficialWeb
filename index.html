@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPay - Premium Crypto Payment Solution</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #161616;
+            --primary-color: #00ff88;
+            --secondary-color: #00ccff;
+            --text-color: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-gradient: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Utilities */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .gradient-text {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: #000;
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .lang-switch {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .lang-switch:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: #0a0a0a;
+            overflow: hidden;
+        }
+
+        #map-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Demo Section */
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-color: var(--primary-color);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+        }
+
+        .credentials {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .credentials div {
+            margin-bottom: 5px;
+        }
+
+        .credentials span {
+            color: var(--secondary-color);
+        }
+
+        /* Video Section */
+        .video-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 30px;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .pricing-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary-color);
+            background: linear-gradient(180deg, rgba(0, 255, 136, 0.05) 0%, var(--card-bg) 100%);
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 20px 0;
+            color: var(--text-color);
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .pricing-features li::before {
+            content: "✓";
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: #050505;
+            padding: 60px 0 30px;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .legal-links {
+            margin-bottom: 20px;
+        }
+
+        .legal-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .legal-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-body {
+            padding: 30px;
+            overflow-y: auto;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .modal-body h3 {
+            color: var(--text-color);
+            margin: 25px 0 10px;
+            font-size: 1.1rem;
+        }
+
+        .modal-body h3:first-child {
+            margin-top: 0;
+        }
+
+        .modal-body p,
+        .modal-body ul {
+            margin-bottom: 15px;
+        }
+
+        .modal-body ul {
+            padding-left: 20px;
+        }
+
+        .modal-body li {
+            margin-bottom: 5px;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .section {
+                padding: 60px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><span class="gradient-text">UPay</span></div>
+                <button class="lang-switch" id="langToggle">中文 / EN</button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div id="map-background"></div>
+        <div class="container hero-content">
+            <h1 data-i18n="hero_title">The Future of <br><span class="gradient-text">Crypto Payments</span></h1>
+            <p data-i18n="hero_subtitle">Secure, fast, and fee-free transactions on the BSC network. Empower your
+                business with UPay.</p>
+            <a href="#demos" class="btn btn-primary" data-i18n="cta_button">View Demos</a>
+        </div>
+    </section>
+
+    <section id="demos" class="section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="demo_title">Live Demos</h2>
+            <div class="demo-grid">
+                <!-- Frontend Demo -->
+                <div class="card">
+                    <h3 data-i18n="frontend_demo">Frontend Demo</h3>
+                    <p data-i18n="frontend_desc">Experience the seamless checkout process for your customers.</p>
+                    <a href="https://hauserjr.github.io/UPayDemo/" target="_blank" class="btn btn-primary"
+                        data-i18n="try_now">Try Now</a>
+                </div>
+
+                <!-- Backend Demo -->
+                <div class="card">
+                    <h3 data-i18n="backend_demo">Dashboard Demo</h3>
+                    <p data-i18n="backend_desc">Powerful management tools for your business.</p>
+                    <div class="credentials">
+                        <div><span data-i18n="account">Account</span>: test1234</div>
+                        <div><span data-i18n="password">Password</span>: AAaa11!!</div>
+                    </div>
+                    <a href="https://hauserjr.github.io/UPayDashboard/#/dashboard/orders" target="_blank"
+                        class="btn btn-outline" data-i18n="login_dashboard">Login Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="video_title">See It In Action</h2>
+            <div class="video-container">
+                <!-- User to place video file here -->
+                <video controls>
+                    <source src="demo.mp4" type="video/mp4">
+                    <p style="color: white; padding: 20px;">Your browser does not support the video tag. Please place
+                        'demo.mp4' in the folder.</p>
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="features_title">Why Choose UPay?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⛓️</div>
+                    <h3 data-i18n="feat_bsc">BSC Network</h3>
+                    <p data-i18n="feat_bsc_desc">Built on Binance Smart Chain for speed and reliability.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💸</div>
+                    <h3 data-i18n="feat_fee">0% Transaction Fees</h3>
+                    <p data-i18n="feat_fee_desc">We don't charge any transaction fees on your payments.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 data-i18n="feat_wallet">Wallet Control</h3>
+                    <p data-i18n="feat_wallet_desc">Choose between custodial service or self-managed wallet (Mnemonic).
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 data-i18n="feat_privacy">One-Time Address</h3>
+                    <p data-i18n="feat_privacy_desc">Unique address for every order for maximum privacy and security.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" data-i18n="pricing_title">Simple Pricing</h2>
+            <div class="pricing-grid">
+                <!-- Rental -->
+                <div class="pricing-card">
+                    <h3 data-i18n="plan_weekly">Weekly</h3>
+                    <div class="price">79 <span>USDT</span></div>
+                    <ul class="pricing-features">
+                        <li data-i18n="full_access">Full System Access</li>
+                        <li data-i18n="support">Basic Support</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline" data-i18n="select_plan">Select Plan</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <h3 data-i18n="plan_monthly">Monthly</h3>
+                    <div class="price">299 <span>USDT</span></div>
+                    <ul class="pricing-features">
+                        <li data-i18n="full_access">Full System Access</li>
+                        <li data-i18n="priority_support">Priority Support</li>
+                        <li data-i18n="best_value">Best Value</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary" data-i18n="select_plan">Select Plan</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3 data-i18n="plan_yearly">Yearly</h3>
+                    <div class="price">3399 <span>USDT</span></div>
+                    <ul class="pricing-features">
+                        <li data-i18n="full_access">Full System Access</li>
+                        <li data-i18n="long_term">Long-term Savings</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline" data-i18n="select_plan">Select Plan</a>
+                </div>
+
+                <!-- Buyout -->
+                <div class="pricing-card">
+                    <h3 data-i18n="plan_buyout">Buyout</h3>
+                    <div class="price">7999 <span>USDT</span></div>
+                    <ul class="pricing-features">
+                        <li data-i18n="source_code">Source Code Included</li>
+                        <li data-i18n="self_host">Self-Hosted</li>
+                        <li data-i18n="lifetime">Lifetime License</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline" data-i18n="contact_sales">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="legal-links">
+                <a onclick="openModal('privacy')" data-i18n="privacy_policy">Privacy Policy</a>
+                <a onclick="openModal('terms')" data-i18n="legal_disclaimer">Legal Disclaimer</a>
+            </div>
+            <div class="copyright">
+                &copy; 2024 UPay. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Title</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                hero_title: 'The Future of <br><span class="gradient-text">Crypto Payments</span>',
+                hero_subtitle: 'Secure, fast, and fee-free transactions on the BSC network. Empower your business with UPay.',
+                cta_button: 'View Demos',
+                demo_title: 'Live Demos',
+                frontend_demo: 'Frontend Demo',
+                frontend_desc: 'Experience the seamless checkout process for your customers.',
+                try_now: 'Try Now',
+                backend_demo: 'Dashboard Demo',
+                backend_desc: 'Powerful management tools for your business.',
+                account: 'Account',
+                password: 'Password',
+                login_dashboard: 'Login Dashboard',
+                video_title: 'See It In Action',
+                features_title: 'Why Choose UPay?',
+                feat_bsc: 'BSC Network',
+                feat_bsc_desc: 'Built on Binance Smart Chain for speed and reliability.',
+                feat_fee: '0% Transaction Fees',
+                feat_fee_desc: "We don't charge any transaction fees on your payments.",
+                feat_wallet: 'Wallet Control',
+                feat_wallet_desc: 'Choose between custodial service or self-managed wallet (Mnemonic).',
+                feat_privacy: 'One-Time Address',
+                feat_privacy_desc: 'Unique address for every order for maximum privacy and security.',
+                pricing_title: 'Simple Pricing',
+                plan_weekly: 'Weekly',
+                plan_monthly: 'Monthly',
+                plan_yearly: 'Yearly',
+                plan_buyout: 'Buyout',
+                full_access: 'Full System Access',
+                support: 'Basic Support',
+                priority_support: 'Priority Support',
+                best_value: 'Best Value',
+                long_term: 'Long-term Savings',
+                source_code: 'Source Code Included',
+                self_host: 'Self-Hosted',
+                lifetime: 'Lifetime License',
+                select_plan: 'Select Plan',
+                contact_sales: 'Contact Sales',
+                privacy_policy: 'Privacy Policy',
+                legal_disclaimer: 'Legal Disclaimer',
+                // Modal Titles
+                modal_privacy_title: 'Privacy Policy',
+                modal_terms_title: 'Legal Disclaimer & Terms of Service',
+                // Privacy Content (HTML)
+                modal_privacy_content: `
+                    <h3>1. Introduction</h3>
+                    <p>At UPay, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.</p>
+                    
+                    <h3>2. Collection of Information</h3>
+                    <p>We may collect information about you in a variety of ways. The information we may collect includes:</p>
+                    <ul>
+                        <li><strong>Personal Data:</strong> Personally identifiable information, such as your name, email address, and telephone number, that you voluntarily give to us when you register or choose to participate in various activities related to the Application.</li>
+                        <li><strong>Derivative Data:</strong> Information our servers automatically collect when you access the Site, such as your IP address, your browser type, your operating system, your access times, and the pages you have viewed directly before and after accessing the Site.</li>
+                        <li><strong>Financial Data:</strong> Financial information, such as data related to your payment method (e.g., valid credit card number, card brand, expiration date) that we may collect when you purchase, order, return, exchange, or request information about our services.</li>
+                    </ul>
+
+                    <h3>3. Use of Your Information</h3>
+                    <p>Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the Site to:</p>
+                    <ul>
+                        <li>Create and manage your account.</li>
+                        <li>Process your payments and refunds.</li>
+                        <li>Email you regarding your account or order.</li>
+                        <li>Prevent fraudulent transactions, monitor against theft, and protect against criminal activity.</li>
+                    </ul>
+
+                    <h3>4. Disclosure of Your Information</h3>
+                    <p>We may share information we have collected about you in certain situations. Your information may be disclosed as follows:</p>
+                    <ul>
+                        <li><strong>By Law or to Protect Rights:</strong> If we believe the release of information about you is necessary to respond to legal process, to investigate or remedy potential violations of our policies, or to protect the rights, property, and safety of others, we may share your information as permitted or required by any applicable law, rule, or regulation.</li>
+                    </ul>
+
+                    <h3>5. Security of Your Information</h3>
+                    <p>We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse.</p>
+                `,
+                // Terms Content (HTML)
+                modal_terms_content: `
+                    <h3>1. Acceptance of Terms</h3>
+                    <p>By accessing and using this website and our services, you accept and agree to be bound by the terms and provision of this agreement.</p>
+
+                    <h3>2. Strict Prohibition of Illegal Activities</h3>
+                    <p><strong>UPay strictly prohibits the use of our services for any illegal activities.</strong> This includes, but is not limited to:</p>
+                    <ul>
+                        <li>Money laundering or terrorist financing.</li>
+                        <li>Fraud, scams, or deceptive practices.</li>
+                        <li>Purchase or sale of illegal goods or services.</li>
+                        <li>Gambling in jurisdictions where it is prohibited.</li>
+                    </ul>
+                    <p>If we suspect or identify any such activity, we reserve the right to <strong>immediately suspend or terminate your account</strong> without prior notice and report such activities to relevant law enforcement authorities.</p>
+
+                    <h3>3. Intellectual Property</h3>
+                    <p>The Site and its original content, features, and functionality are owned by UPay and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.</p>
+
+                    <h3>4. Disclaimer of Warranties</h3>
+                    <p>The site and its content are provided "as is". UPay makes no representations or warranties of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the Site.</p>
+
+                    <h3>5. Limitation of Liability</h3>
+                    <p>In no event shall UPay, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.</p>
+
+                    <h3>6. Governing Law</h3>
+                    <p>These Terms shall be governed and construed in accordance with the laws of the jurisdiction in which UPay operates, without regard to its conflict of law provisions.</p>
+                `
+            },
+            zh: {
+                hero_title: '未來的 <br><span class="gradient-text">加密貨幣支付</span>',
+                hero_subtitle: '基於 BSC 網絡的安全、快速且免手續費交易。使用 UPay 賦能您的業務。',
+                cta_button: '查看演示',
+                demo_title: '在線演示',
+                frontend_demo: '前台演示',
+                frontend_desc: '體驗為您的客戶提供的無縫結賬流程。',
+                try_now: '立即體驗',
+                backend_demo: '後台演示',
+                backend_desc: '強大的業務管理工具。',
+                account: '帳號',
+                password: '密碼',
+                login_dashboard: '登入後台',
+                video_title: '實際操作影片',
+                features_title: '為什麼選擇 UPay？',
+                feat_bsc: 'BSC 網絡',
+                feat_bsc_desc: '基於幣安智能鏈，速度快且可靠。',
+                feat_fee: '0% 交易手續費',
+                feat_fee_desc: '我們不收取任何交易手續費。',
+                feat_wallet: '錢包控制權',
+                feat_wallet_desc: '可選擇託管服務或自行管理錢包（助記詞）。',
+                feat_privacy: '一次性地址',
+                feat_privacy_desc: '每筆訂單使用唯一地址，確保最大程度的隱私和安全。',
+                pricing_title: '簡單定價',
+                plan_weekly: '單周租用',
+                plan_monthly: '包月租用',
+                plan_yearly: '包年租用',
+                plan_buyout: '買斷方案',
+                full_access: '完整系統權限',
+                support: '基本支援',
+                priority_support: '優先支援',
+                best_value: '超值首選',
+                long_term: '長期優惠',
+                source_code: '包含源代碼',
+                self_host: '可自架經營',
+                lifetime: '終身授權',
+                select_plan: '選擇方案',
+                contact_sales: '聯繫銷售',
+                privacy_policy: '隱私權政策',
+                legal_disclaimer: '法律免責申明',
+                // Modal Titles
+                modal_privacy_title: '隱私權政策',
+                modal_terms_title: '法律免責申明與服務條款',
+                // Privacy Content (HTML)
+                modal_privacy_content: `
+                    <h3>1. 簡介</h3>
+                    <p>在 UPay，我們非常重視您的隱私。本隱私政策說明了我們在您訪問我們的網站或使用我們的服務時如何收集、使用、披露和保護您的信息。</p>
+                    
+                    <h3>2. 信息收集</h3>
+                    <p>我們可能會以多種方式收集有關您的信息。我們可能收集的信息包括：</p>
+                    <ul>
+                        <li><strong>個人數據：</strong> 您在註冊或選擇參與與應用程序相關的各種活動時自願提供給我們的個人身份信息，例如您的姓名、電子郵件地址和電話號碼。</li>
+                        <li><strong>衍生數據：</strong> 當您訪問本網站時，我們的服務器會自動收集的信息，例如您的 IP 地址、瀏覽器類型、操作系統、訪問時間以及您在訪問本網站之前和之後直接查看的頁面。</li>
+                        <li><strong>財務數據：</strong> 當您購買、訂購、退貨、換貨或請求有關我們服務的信息時，我們可能會收集與您的付款方式相關的數據（例如有效的信用卡號、卡品牌、到期日期）。</li>
+                    </ul>
+
+                    <h3>3. 信息使用</h3>
+                    <p>擁有關於您的準確信息使我們能夠為您提供順暢、高效和定制的體驗。具體而言，我們可能會使用通過本網站收集的有關您的信息來：</p>
+                    <ul>
+                        <li>創建和管理您的帳戶。</li>
+                        <li>處理您的付款和退款。</li>
+                        <li>就您的帳戶或訂單向您發送電子郵件。</li>
+                        <li>防止欺詐交易，監控盜竊行為，並防止犯罪活動。</li>
+                    </ul>
+
+                    <h3>4. 信息披露</h3>
+                    <p>我們可能會在某些情況下分享我們收集到的關於您的信息。您的信息可能會如下披露：</p>
+                    <ul>
+                        <li><strong>依法或為了保護權利：</strong> 如果我們認為發布有關您的信息對於響應法律程序、調查或補救潛在的違反我們政策的行為、或保護他人的權利、財產和安全是必要的，我們可能會根據任何適用法律、規則或法規的允許或要求分享您的信息。</li>
+                    </ul>
+
+                    <h3>5. 信息安全</h3>
+                    <p>我們使用行政、技術和物理安全措施來幫助保護您的個人信息。雖然我們已採取合理措施保護您提供給我們的個人信息，但請注意，儘管我們做出了努力，但沒有任何安全措施是完美或不可滲透的，也沒有任何數據傳輸方法可以保證不被攔截或其他類型的濫用。</p>
+                `,
+                // Terms Content (HTML)
+                modal_terms_content: `
+                    <h3>1. 接受條款</h3>
+                    <p>通過訪問和使用本網站及我們的服務，即表示您接受並同意受本協議條款和規定的約束。</p>
+
+                    <h3>2. 嚴禁非法活動</h3>
+                    <p><strong>UPay 嚴格禁止使用我們的服務進行任何非法活動。</strong> 這包括但不限於：</p>
+                    <ul>
+                        <li>洗錢或資助恐怖主義。</li>
+                        <li>欺詐、詐騙或欺騙行為。</li>
+                        <li>購買或出售非法商品或服務。</li>
+                        <li>在禁止賭博的司法管轄區進行賭博。</li>
+                    </ul>
+                    <p>如果我們懷疑或發現任何此類活動，我們保留<strong>立即暫停或終止您的帳戶</strong>的權利，恕不另行通知，並向相關執法機構報告此類活動。</p>
+
+                    <h3>3. 知識產權</h3>
+                    <p>本網站及其原始內容、功能和功能歸 UPay 所有，並受國際版權、商標、專利、商業秘密和其他知識產權或專有權利法律的保護。</p>
+
+                    <h3>4. 免責聲明</h3>
+                    <p>本網站及其內容按“原樣”提供。UPay 不對本網站上任何信息的準確性、充分性、有效性、可靠性、可用性或完整性做出任何形式的明示或暗示的陳述或保證。</p>
+
+                    <h3>5. 責任限制</h3>
+                    <p>在任何情況下，UPay 及其董事、員工、合作夥伴、代理商、供應商或附屬公司均不對任何間接、附帶、特殊、後果性或懲罰性損害承擔責任，包括但不限於因您訪問或使用或無法訪問或使用本服務而導致的利潤、數據、使用、商譽或其他無形損失。</p>
+
+                    <h3>6. 適用法律</h3>
+                    <p>這些條款應受 UPay 運營所在司法管轄區的法律管轄並據其解釋，而不考慮其法律衝突規定。</p>
+                `
+            }
+        };
+
+        let currentLang = 'zh'; // Default to Chinese
+
+        function updateContent() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.innerHTML = translations[currentLang][key];
+                }
+            });
+            document.getElementById('langToggle').innerText = currentLang === 'en' ? '中文' : 'English';
+        }
+
+        document.getElementById('langToggle').addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            updateContent();
+        });
+
+        // Modal Logic
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        function openModal(type) {
+            if (type === 'privacy') {
+                modalTitle.innerText = translations[currentLang].modal_privacy_title;
+                modalBody.innerHTML = translations[currentLang].modal_privacy_content;
+            } else if (type === 'terms') {
+                modalTitle.innerText = translations[currentLang].modal_terms_title;
+                modalBody.innerHTML = translations[currentLang].modal_terms_content;
+            }
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close modal when clicking outside
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        updateContent();
+
+        // World Map Animation
+        function initMap() {
+            const chart = echarts.init(document.getElementById('map-background'));
+
+            // Major crypto hubs / cities coordinates
+            const cities = [
+                { name: 'New York', value: [-74.006, 40.7128] },
+                { name: 'London', value: [-0.1278, 51.5074] },
+                { name: 'Singapore', value: [103.8198, 1.3521] },
+                { name: 'Tokyo', value: [139.6917, 35.6895] },
+                { name: 'Dubai', value: [55.2708, 25.2048] },
+                { name: 'San Francisco', value: [-122.4194, 37.7749] },
+                { name: 'Hong Kong', value: [114.1694, 22.3193] },
+                { name: 'Seoul', value: [126.9780, 37.5665] },
+                { name: 'Berlin', value: [13.4050, 52.5200] },
+                { name: 'Sydney', value: [151.2093, -33.8688] },
+                { name: 'Sao Paulo', value: [-46.6333, -23.5505] },
+                { name: 'Toronto', value: [-79.3832, 43.6532] }
+            ];
+
+            function generateLines() {
+                const lines = [];
+                // Generate random connections
+                for (let i = 0; i < 20; i++) {
+                    const from = cities[Math.floor(Math.random() * cities.length)];
+                    const to = cities[Math.floor(Math.random() * cities.length)];
+                    if (from.name !== to.name) {
+                        lines.push({
+                            coords: [from.value, to.value],
+                            value: 1
+                        });
+                    }
+                }
+                return lines;
+            }
+
+            const option = {
+                backgroundColor: 'transparent',
+                geo: {
+                    map: 'world',
+                    roam: false,
+                    silent: true,
+                    itemStyle: {
+                        areaColor: '#1a1a1a',
+                        borderColor: '#333'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            areaColor: '#2a2a2a'
+                        }
+                    }
+                },
+                series: [
+                    {
+                        type: 'scatter',
+                        coordinateSystem: 'geo',
+                        data: cities,
+                        symbolSize: 6,
+                        itemStyle: {
+                            color: '#00ff88',
+                            shadowBlur: 10,
+                            shadowColor: '#00ff88'
+                        }
+                    },
+                    {
+                        type: 'lines',
+                        coordinateSystem: 'geo',
+                        data: generateLines(),
+                        effect: {
+                            show: true,
+                            period: 4,
+                            trailLength: 0.1,
+                            symbol: 'arrow',
+                            symbolSize: 5,
+                            color: '#00ccff'
+                        },
+                        lineStyle: {
+                            color: {
+                                type: 'linear',
+                                x: 0,
+                                y: 0,
+                                x2: 0,
+                                y2: 1,
+                                colorStops: [{
+                                    offset: 0, color: 'rgba(0, 255, 136, 0.1)'
+                                }, {
+                                    offset: 1, color: 'rgba(0, 204, 255, 0.1)'
+                                }],
+                                global: false
+                            },
+                            width: 1,
+                            opacity: 0.2,
+                            curveness: 0.3
+                        }
+                    }
+                ]
+            };
+
+            chart.setOption(option);
+
+            // Update lines periodically to simulate active transactions
+            setInterval(() => {
+                chart.setOption({
+                    series: [
+                        {},
+                        {
+                            data: generateLines()
+                        }
+                    ]
+                });
+            }, 3000);
+
+            // Handle resize
+            window.addEventListener('resize', () => {
+                chart.resize();
+            });
+        }
+
+        // Wait for ECharts to load
+        window.addEventListener('load', initMap);
+    </script>
+</body>
+
+</html>
